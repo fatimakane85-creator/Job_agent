@@ -62,6 +62,28 @@ EXCLUDE_TERMS = [
 
 MIN_SCORE = 3
 
+# ---- TARGET EMPLOYERS (your shortlist) -------------------------------------
+# Any posting from these firms jumps to the top of the dashboard with a star,
+# and the relevance filter is loosened for them so you never miss one.
+# Matching is a simple lowercase "contains" on the company name — add or
+# remove names freely.
+WATCHLIST = [
+    # Québec — fabricants & CDMO
+    "pharmascience", "jamp", "bausch", "sandoz", "delpharm", "parima",
+    "duchesnay", "galderma", "theratechnologies", "liminal", "pendopharm",
+    # Québec — CRO / laboratoires
+    "altasciences", "charles river", "indero", "innovaderm", "royalmount",
+    # Québec — conseil qualité / validation / ingénierie
+    "laporte", "monbel", "novatek", "pharmalex", "propharma",
+    # Distribution / services pharma
+    "cencora", "innomar", "mckesson",
+    # Multinationales présentes au Québec
+    "pfizer", "merck", "novartis", "sanofi", "gsk", "glaxo", "haleon",
+    "takeda", "roche",
+    # Ontario
+    "apotex", "sterimax", "novocol", "bayer",
+]
+
 GREENHOUSE_COMPANIES: list[str] = []
 LEVER_COMPANIES: list[str] = []
 
@@ -216,6 +238,11 @@ def fetch_lever(slug: str) -> list[Job]:
 # ----------------------------------------------------------------------------
 # FILTERING
 # ----------------------------------------------------------------------------
+def is_target(company: str) -> bool:
+    c = company.lower()
+    return any(name in c for name in WATCHLIST)
+
+
 def score(job: Job) -> int:
     hay_title = job.title.lower()
     hay_all = f"{job.title}\n{job.description}".lower()
@@ -278,6 +305,8 @@ HTML_TEMPLATE = """<!doctype html>
      font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;user-select:none}
   td{padding:11px 12px;border-top:1px solid var(--line);vertical-align:top}
   tr:hover td{background:#f6f9f7}
+  tr.target td{background:#fbf6e9}
+  tr.target:hover td{background:#f7efd8}
   .score{font-weight:700;color:var(--sage);text-align:center;width:46px}
   .src{color:var(--gray);font-size:12px;white-space:nowrap}
   a.apply{color:var(--sage);font-weight:600;text-decoration:none;white-space:nowrap}
@@ -287,7 +316,7 @@ HTML_TEMPLATE = """<!doctype html>
 </style></head>
 <body><div class="wrap">
   <h1>Mes offres — Qualité, Validation & Amélioration</h1>
-  <div class="meta">{COUNT} offres actives · mise à jour {UPDATED}</div>
+  <div class="meta">{COUNT} offres actives · {TARGETS} chez mes employeurs cibles &#11088; · mise à jour {UPDATED}</div>
   <input class="search" id="q" placeholder="Filtrer (ex. validation, Pharmascience, contrat)…">
   <table id="t">
     <thead><tr>
@@ -319,20 +348,24 @@ HTML_TEMPLATE = """<!doctype html>
 def write_html(jobs: list[Job], path: str) -> None:
     rows = []
     for j in jobs:
+        target = j.extras.get("target", False)
+        star = "&#11088; " if target else ""        # ⭐
         rows.append(
-            f'<tr data-score="{j.score}" data-date="{html.escape(j.posted)}">'
+            f'<tr class="{"target" if target else ""}" data-score="{j.score}" data-date="{html.escape(j.posted)}">'
             f'<td class="score">{j.score}</td>'
-            f'<td>{html.escape(j.title)}</td>'
+            f'<td>{star}{html.escape(j.title)}</td>'
             f'<td>{html.escape(j.company)}</td>'
             f'<td>{html.escape(j.location)}</td>'
             f'<td>{html.escape(j.posted)}</td>'
             f'<td class="src">{html.escape(j.source)}</td>'
             f'<td><a class="apply" href="{html.escape(j.url)}" target="_blank" rel="noopener">Voir &rarr;</a></td>'
             f'</tr>')
+    n_target = sum(1 for j in jobs if j.extras.get("target"))
     out = (HTML_TEMPLATE
            .replace("{ROWS}", "\n".join(rows))
            .replace("{UPDATED}", dt.datetime.now().strftime("%Y-%m-%d %H:%M"))
-           .replace("{COUNT}", str(len(jobs))))
+           .replace("{COUNT}", str(len(jobs)))
+           .replace("{TARGETS}", str(n_target)))
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(out)
@@ -374,10 +407,16 @@ def main() -> None:
 
     relevant = []
     for j in deduped:
-        j.score = score(j)
-        if j.score >= MIN_SCORE:
+        base = score(j)
+        if base < 0:          # excluded by EXCLUDE_TERMS
+            continue
+        target = is_target(j.company)
+        j.extras["target"] = target
+        # Target firms only need a faint signal (>=1); others need MIN_SCORE.
+        if base >= MIN_SCORE or (target and base >= 1):
+            j.score = base + (5 if target else 0)   # boost targets to the top
             relevant.append(j)
-    relevant.sort(key=lambda x: x.score, reverse=True)
+    relevant.sort(key=lambda x: (x.extras.get("target", False), x.score), reverse=True)
     print(f"{len(relevant)} pass the relevance threshold. Checking links...")
 
     active = []
