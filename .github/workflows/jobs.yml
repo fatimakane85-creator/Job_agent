@@ -1,13 +1,14 @@
 name: job-agent
 
-# WHAT THIS FILE DOES:
-# It tells GitHub to run your job_agent.py automatically on a schedule,
-# then saves the results so you can download them.
+# Runs the agent once a week and publishes the results dashboard.
 
 on:
   schedule:
-    - cron: "0 12 * * 1-5"   # runs every weekday around 7-8 a.m. Montreal time
-  workflow_dispatch:          # ALSO lets you press a "Run" button yourself anytime
+    - cron: "0 12 * * 1"     # every Monday ~7-8 a.m. Montreal time
+  workflow_dispatch:          # also lets you press "Run workflow" yourself anytime
+
+permissions:
+  contents: write             # lets the agent save the dashboard back into your repo
 
 jobs:
   find-jobs:
@@ -27,15 +28,15 @@ jobs:
         env:
           ADZUNA_APP_ID:  ${{ secrets.ADZUNA_APP_ID }}
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
-          # The lines below are optional. If you don't set these secrets,
-          # they're simply ignored — nothing breaks.
           JSEARCH_API_KEY: ${{ secrets.JSEARCH_API_KEY }}
           EMAIL_TO:  ${{ secrets.EMAIL_TO }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
 
-      - name: Save the results so you can download them
-        uses: actions/upload-artifact@v4
-        with:
-          name: jobs-found
-          path: jobs_found.csv
+      - name: Publish the dashboard
+        run: |
+          git config user.name "job-agent"
+          git config user.email "actions@users.noreplace.github.com"
+          git add docs/index.html docs/jobs_found.csv
+          git commit -m "Update job dashboard" || echo "No changes to publish"
+          git push
