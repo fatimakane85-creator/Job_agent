@@ -58,9 +58,12 @@ STRONG_TITLE_TERMS = [
 ]
 
 # Words that almost always mean "not for me" — drop these outright.
-EXCLUDE_TERMS = [
-    "senior manager", "director", "directeur", "vp ", "head of",
+EXCLUDE_TERMS = [  "senior manager", "director", "directeur", "vp ", "head of",
     "10+ years", "15+ years", "sales", "ventes",
+    "software", "logiciel", "logicielle", "firmware", "embedded", "embarqué",
+    "sdet", "developer", "développeur", "dev qa", "qa automation",
+    "environmental", "environnement", "sols contaminés",
+    "financial", "financier", "paralegal", "marketing compliance",
 ]
 
 # A job must reach this relevance score to be shown.
