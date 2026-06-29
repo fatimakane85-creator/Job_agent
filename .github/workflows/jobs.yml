@@ -1,1 +1,41 @@
+name: job-agent
 
+# WHAT THIS FILE DOES:
+# It tells GitHub to run your job_agent.py automatically on a schedule,
+# then saves the results so you can download them.
+
+on:
+  schedule:
+    - cron: "0 12 * * 1-5"   # runs every weekday around 7-8 a.m. Montreal time
+  workflow_dispatch:          # ALSO lets you press a "Run" button yourself anytime
+
+jobs:
+  find-jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the one thing the script needs
+        run: pip install requests
+
+      - name: Run the job agent
+        run: python job_agent.py
+        env:
+          ADZUNA_APP_ID:  ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          # The lines below are optional. If you don't set these secrets,
+          # they're simply ignored — nothing breaks.
+          JSEARCH_API_KEY: ${{ secrets.JSEARCH_API_KEY }}
+          EMAIL_TO:  ${{ secrets.EMAIL_TO }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+
+      - name: Save the results so you can download them
+        uses: actions/upload-artifact@v4
+        with:
+          name: jobs-found
+          path: jobs_found.csv
