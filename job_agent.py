@@ -2,18 +2,14 @@
 """
 job_agent.py — a personal job-finding agent for QA / validation / quality roles.
 
-What it does, end to end:
-  1. Pulls fresh listings from several sources (Adzuna, JSearch, and any company
-     ATS feeds you list — Greenhouse / Lever).
-  2. Keeps only recent postings (you choose how many days back).
-  3. Scores each job for relevance to your profile and drops the weak matches.
-  4. Verifies every apply link is actually live (skips 404s AND "this job is
-     closed" pages that still return 200).
-  5. Writes results to a CSV and, optionally, emails you a digest.
-
-It is built to be run on a schedule (e.g. GitHub Actions or cron) through your
-networking season. Configure it with environment variables — never hard-code
-keys into the file.
+Pipeline:
+  1. Pull fresh listings from Adzuna, JSearch, and any company ATS feeds you add.
+  2. Keep only recent postings.
+  3. Score each job for relevance and drop weak / unrelated ones.
+  4. Verify every apply link is actually live (skips 404s AND "this job is
+     closed" pages that still return HTTP 200).
+  5. Write results to: a CSV, and a self-contained HTML dashboard (docs/index.html)
+     that GitHub Pages can publish. Optionally emails a digest.
 
 Dependencies:  pip install requests
 """
@@ -22,6 +18,7 @@ import os
 import csv
 import sys
 import time
+import html
 import smtplib
 import datetime as dt
 from email.mime.text import MIMEText
@@ -30,16 +27,12 @@ from dataclasses import dataclass, field
 import requests
 
 # ----------------------------------------------------------------------------
-# CONFIG  — edit these, or override any of them with environment variables.
+# CONFIG
 # ----------------------------------------------------------------------------
+COUNTRY = "ca"
+LOCATION = "Montreal"
+MAX_DAYS_OLD = 30
 
-# Where you're looking.
-COUNTRY = "ca"                 # Adzuna country code
-LOCATION = "Montreal"          # city / region keyword
-MAX_DAYS_OLD = 30              # only postings from the last N days
-
-# What you're looking for. Mix English + French; these drive both the API
-# queries and the relevance scoring. Keep them specific to your field.
 KEYWORDS = [
     "quality assurance", "assurance qualité",
     "validation", "qualification",
@@ -50,15 +43,16 @@ KEYWORDS = [
     "regulatory compliance", "conformité réglementaire",
 ]
 
-# Words in a title that strongly mean "this is for me" (boost score).
 STRONG_TITLE_TERMS = [
     "quality", "qualité", "validation", "qualification",
     "qa", "quality assurance", "gmp", "bpf", "compliance", "conformité",
     "quality systems", "process improvement", "amélioration",
 ]
 
-# Words that almost always mean "not for me" — drop these outright.
-EXCLUDE_TERMS = [  "senior manager", "director", "directeur", "vp ", "head of",
+# Cut the two big noise sources we saw: software-testing "QA" and
+# non-pharma compliance (environmental / financial / legal).
+EXCLUDE_TERMS = [
+    "senior manager", "director", "directeur", "vp ", "head of",
     "10+ years", "15+ years", "sales", "ventes",
     "software", "logiciel", "logicielle", "firmware", "embedded", "embarqué",
     "sdet", "developer", "développeur", "dev qa", "qa automation",
@@ -66,36 +60,28 @@ EXCLUDE_TERMS = [  "senior manager", "director", "directeur", "vp ", "head of",
     "financial", "financier", "paralegal", "marketing compliance",
 ]
 
-# A job must reach this relevance score to be shown.
 MIN_SCORE = 3
 
-# Company ATS feeds — the highest-signal, always-current source.
-# Find the "slug" in a company's careers URL. Examples:
-#   Greenhouse: boards.greenhouse.io/SLUG          -> add SLUG below
-#   Lever:      jobs.lever.co/SLUG                  -> add SLUG below
-# These are EXAMPLES — replace with your real target employers.
-GREENHOUSE_COMPANIES: list[str] = []   # e.g. ["acmebio", "examplepharma"]
-LEVER_COMPANIES: list[str] = []        # e.g. ["examplepharma"]
+GREENHOUSE_COMPANIES: list[str] = []
+LEVER_COMPANIES: list[str] = []
 
-# Output
-OUTPUT_CSV = os.environ.get("OUTPUT_CSV", "jobs_found.csv")
+# Output locations (docs/ is what GitHub Pages publishes)
+OUTPUT_CSV = os.environ.get("OUTPUT_CSV", "docs/jobs_found.csv")
+OUTPUT_HTML = os.environ.get("OUTPUT_HTML", "docs/index.html")
 
-# ---- Secrets (set as environment variables, not in this file) --------------
 ADZUNA_APP_ID = os.environ.get("ADZUNA_APP_ID", "")
 ADZUNA_APP_KEY = os.environ.get("ADZUNA_APP_KEY", "")
-JSEARCH_API_KEY = os.environ.get("JSEARCH_API_KEY", "")   # RapidAPI key
+JSEARCH_API_KEY = os.environ.get("JSEARCH_API_KEY", "")
 
-# Email digest (optional). If these aren't set, it just writes the CSV.
 EMAIL_TO = os.environ.get("EMAIL_TO", "")
 EMAIL_FROM = os.environ.get("EMAIL_FROM", "")
 SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "")
-SMTP_PASS = os.environ.get("SMTP_PASS", "")   # use an app password, never your real one
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (job-agent; personal use)"}
 
-# Phrases that mean a posting is dead even when the page returns HTTP 200.
 CLOSED_PHRASES = [
     "no longer available", "no longer accepting", "position has been filled",
     "this job has expired", "job is closed", "posting is closed",
@@ -124,22 +110,16 @@ class Job:
 # ----------------------------------------------------------------------------
 # SOURCES
 # ----------------------------------------------------------------------------
-
 def fetch_adzuna() -> list[Job]:
     if not (ADZUNA_APP_ID and ADZUNA_APP_KEY):
         return []
     jobs: list[Job] = []
-    # One query per keyword keeps results focused; Adzuna ORs poorly otherwise.
     for kw in KEYWORDS:
         url = f"https://api.adzuna.com/v1/api/jobs/{COUNTRY}/search/1"
         params = {
-            "app_id": ADZUNA_APP_ID,
-            "app_key": ADZUNA_APP_KEY,
-            "what": kw,
-            "where": LOCATION,
-            "max_days_old": MAX_DAYS_OLD,
-            "results_per_page": 25,
-            "sort_by": "date",
+            "app_id": ADZUNA_APP_ID, "app_key": ADZUNA_APP_KEY,
+            "what": kw, "where": LOCATION, "max_days_old": MAX_DAYS_OLD,
+            "results_per_page": 25, "sort_by": "date",
             "content-type": "application/json",
         }
         try:
@@ -150,14 +130,13 @@ def fetch_adzuna() -> list[Job]:
                     title=it.get("title", "").replace("\n", " ").strip(),
                     company=(it.get("company") or {}).get("display_name", "—"),
                     location=(it.get("location") or {}).get("display_name", LOCATION),
-                    url=it.get("redirect_url", ""),
-                    source="Adzuna",
+                    url=it.get("redirect_url", ""), source="Adzuna",
                     posted=(it.get("created", "") or "")[:10],
                     description=it.get("description", ""),
                 ))
         except Exception as e:
             print(f"[Adzuna] '{kw}' failed: {e}", file=sys.stderr)
-        time.sleep(0.5)  # be polite to the rate limit
+        time.sleep(0.5)
     return jobs
 
 
@@ -166,36 +145,27 @@ def fetch_jsearch() -> list[Job]:
         return []
     jobs: list[Job] = []
     date_filter = "month" if MAX_DAYS_OLD > 7 else "week"
-    headers = {**HEADERS,
-               "x-rapidapi-key": JSEARCH_API_KEY,
+    headers = {**HEADERS, "x-rapidapi-key": JSEARCH_API_KEY,
                "x-rapidapi-host": "jsearch.p.rapidapi.com"}
-    # Group keywords into a few broad queries to save API calls.
     queries = ["quality assurance OR validation pharmaceutical",
                "assurance qualité OR validation pharmaceutique"]
     for q in queries:
         try:
-            r = requests.get(
-                "https://jsearch.p.rapidapi.com/search",
-                headers=headers,
-                params={"query": f"{q} {LOCATION}", "page": "1",
-                        "num_pages": "1", "date_posted": date_filter,
-                        "country": COUNTRY},
-                timeout=25,
-            )
+            r = requests.get("https://jsearch.p.rapidapi.com/search", headers=headers,
+                             params={"query": f"{q} {LOCATION}", "page": "1",
+                                     "num_pages": "1", "date_posted": date_filter,
+                                     "country": COUNTRY}, timeout=25)
             r.raise_for_status()
             for it in r.json().get("data", []):
                 ts = it.get("job_posted_at_timestamp")
-                posted = (dt.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d")
-                          if ts else "")
+                posted = (dt.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d") if ts else "")
                 jobs.append(Job(
                     title=it.get("job_title", "").strip(),
                     company=it.get("employer_name", "—"),
-                    location=", ".join(filter(None, [it.get("job_city"),
-                                                     it.get("job_state")])) or LOCATION,
+                    location=", ".join(filter(None, [it.get("job_city"), it.get("job_state")])) or LOCATION,
                     url=it.get("job_apply_link", ""),
                     source=f"JSearch/{it.get('job_publisher','')}",
-                    posted=posted,
-                    description=it.get("job_description", "") or "",
+                    posted=posted, description=it.get("job_description", "") or "",
                 ))
         except Exception as e:
             print(f"[JSearch] '{q}' failed: {e}", file=sys.stderr)
@@ -206,17 +176,14 @@ def fetch_jsearch() -> list[Job]:
 def fetch_greenhouse(slug: str) -> list[Job]:
     jobs: list[Job] = []
     try:
-        r = requests.get(
-            f"https://boards-api.greenhouse.io/v1/boards/{slug}/jobs",
-            params={"content": "true"}, headers=HEADERS, timeout=20)
+        r = requests.get(f"https://boards-api.greenhouse.io/v1/boards/{slug}/jobs",
+                         params={"content": "true"}, headers=HEADERS, timeout=20)
         r.raise_for_status()
         for it in r.json().get("jobs", []):
             jobs.append(Job(
-                title=it.get("title", "").strip(),
-                company=slug,
+                title=it.get("title", "").strip(), company=slug,
                 location=(it.get("location") or {}).get("name", ""),
-                url=it.get("absolute_url", ""),
-                source=f"Greenhouse/{slug}",
+                url=it.get("absolute_url", ""), source=f"Greenhouse/{slug}",
                 posted=(it.get("updated_at", "") or "")[:10],
                 description=it.get("content", "") or "",
             ))
@@ -234,13 +201,11 @@ def fetch_lever(slug: str) -> list[Job]:
         for it in r.json():
             cats = it.get("categories") or {}
             jobs.append(Job(
-                title=it.get("text", "").strip(),
-                company=slug,
-                location=cats.get("location", ""),
-                url=it.get("hostedUrl", ""),
+                title=it.get("text", "").strip(), company=slug,
+                location=cats.get("location", ""), url=it.get("hostedUrl", ""),
                 source=f"Lever/{slug}",
-                posted=(dt.datetime.utcfromtimestamp(it["createdAt"] / 1000)
-                        .strftime("%Y-%m-%d") if it.get("createdAt") else ""),
+                posted=(dt.datetime.utcfromtimestamp(it["createdAt"] / 1000).strftime("%Y-%m-%d")
+                        if it.get("createdAt") else ""),
                 description=it.get("descriptionPlain", "") or "",
             ))
     except Exception as e:
@@ -251,7 +216,6 @@ def fetch_lever(slug: str) -> list[Job]:
 # ----------------------------------------------------------------------------
 # FILTERING
 # ----------------------------------------------------------------------------
-
 def score(job: Job) -> int:
     hay_title = job.title.lower()
     hay_all = f"{job.title}\n{job.description}".lower()
@@ -268,16 +232,13 @@ def score(job: Job) -> int:
 
 
 def is_live(url: str) -> bool:
-    """True only if the link resolves AND the page isn't a closed-job page."""
     if not url:
         return False
     try:
         r = requests.get(url, headers=HEADERS, timeout=15, allow_redirects=True)
     except requests.RequestException:
         return False
-    if r.status_code in (404, 410, 451):
-        return False
-    if r.status_code >= 500:
+    if r.status_code in (404, 410, 451) or r.status_code >= 500:
         return False
     body = r.text.lower()
     if any(p in body for p in CLOSED_PHRASES):
@@ -288,13 +249,93 @@ def is_live(url: str) -> bool:
 # ----------------------------------------------------------------------------
 # OUTPUT
 # ----------------------------------------------------------------------------
-
 def write_csv(jobs: list[Job], path: str) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["score", "title", "company", "location", "posted", "source", "url"])
         for j in jobs:
             w.writerow([j.score, j.title, j.company, j.location, j.posted, j.source, j.url])
+
+
+HTML_TEMPLATE = """<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mes offres — Qualité & Validation</title>
+<style>
+  :root{ --sage:#2F4A43; --bar:#D7E5DF; --line:#E6ECE9; --ink:#1A1A1A; --gray:#5b6b64; }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);
+       margin:0;background:#fbfcfb}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 18px 60px}
+  h1{color:var(--sage);font-size:24px;margin:0 0 4px}
+  .meta{color:var(--gray);font-size:13px;margin-bottom:18px}
+  .search{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;
+          font-size:15px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;font-size:14px;background:#fff;
+        border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th{background:var(--bar);color:var(--sage);text-align:left;padding:10px 12px;
+     font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;user-select:none}
+  td{padding:11px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f6f9f7}
+  .score{font-weight:700;color:var(--sage);text-align:center;width:46px}
+  .src{color:var(--gray);font-size:12px;white-space:nowrap}
+  a.apply{color:var(--sage);font-weight:600;text-decoration:none;white-space:nowrap}
+  a.apply:hover{text-decoration:underline}
+  .empty{padding:30px;text-align:center;color:var(--gray)}
+  @media(max-width:640px){ .src,th.src{display:none} }
+</style></head>
+<body><div class="wrap">
+  <h1>Mes offres — Qualité, Validation & Amélioration</h1>
+  <div class="meta">{COUNT} offres actives · mise à jour {UPDATED}</div>
+  <input class="search" id="q" placeholder="Filtrer (ex. validation, Pharmascience, contrat)…">
+  <table id="t">
+    <thead><tr>
+      <th onclick="sortBy('score')">Score</th>
+      <th>Poste</th><th>Entreprise</th><th>Lieu</th>
+      <th onclick="sortBy('date')">Publié</th>
+      <th class="src">Source</th><th>Lien</th>
+    </tr></thead>
+    <tbody id="b">
+{ROWS}
+    </tbody>
+  </table>
+  <div class="empty" id="none" style="display:none">Aucun résultat pour ce filtre.</div>
+<script>
+  const q=document.getElementById('q'), b=document.getElementById('b'), none=document.getElementById('none');
+  q.addEventListener('input',()=>{const v=q.value.toLowerCase();let shown=0;
+    [...b.rows].forEach(r=>{const m=r.innerText.toLowerCase().includes(v);r.style.display=m?'':'none';if(m)shown++;});
+    none.style.display=shown?'none':'block';});
+  let dir={};
+  function sortBy(k){dir[k]=!dir[k];const rows=[...b.rows];
+    rows.sort((x,y)=>{const a=k==='score'?+x.dataset.score:x.dataset.date,
+      c=k==='score'?+y.dataset.score:y.dataset.date;return dir[k]?(a>c?1:-1):(a<c?1:-1);});
+    rows.forEach(r=>b.appendChild(r));}
+</script>
+</div></body></html>
+"""
+
+
+def write_html(jobs: list[Job], path: str) -> None:
+    rows = []
+    for j in jobs:
+        rows.append(
+            f'<tr data-score="{j.score}" data-date="{html.escape(j.posted)}">'
+            f'<td class="score">{j.score}</td>'
+            f'<td>{html.escape(j.title)}</td>'
+            f'<td>{html.escape(j.company)}</td>'
+            f'<td>{html.escape(j.location)}</td>'
+            f'<td>{html.escape(j.posted)}</td>'
+            f'<td class="src">{html.escape(j.source)}</td>'
+            f'<td><a class="apply" href="{html.escape(j.url)}" target="_blank" rel="noopener">Voir &rarr;</a></td>'
+            f'</tr>')
+    out = (HTML_TEMPLATE
+           .replace("{ROWS}", "\n".join(rows))
+           .replace("{UPDATED}", dt.datetime.now().strftime("%Y-%m-%d %H:%M"))
+           .replace("{COUNT}", str(len(jobs))))
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(out)
 
 
 def email_digest(jobs: list[Job]) -> None:
@@ -303,25 +344,18 @@ def email_digest(jobs: list[Job]) -> None:
     today = dt.date.today().isoformat()
     lines = [f"{len(jobs)} active matches — {today}", ""]
     for j in jobs:
-        lines.append(f"• [{j.score}] {j.title} — {j.company} ({j.location})")
-        lines.append(f"  {j.posted} · {j.source}")
-        lines.append(f"  {j.url}")
-        lines.append("")
+        lines += [f"• [{j.score}] {j.title} — {j.company} ({j.location})",
+                  f"  {j.posted} · {j.source}", f"  {j.url}", ""]
     msg = MIMEText("\n".join(lines), _charset="utf-8")
     msg["Subject"] = f"Job agent: {len(jobs)} active matches ({today})"
     msg["From"] = EMAIL_FROM or SMTP_USER
     msg["To"] = EMAIL_TO
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as s:
-        s.starttls()
-        s.login(SMTP_USER, SMTP_PASS)
-        s.send_message(msg)
+        s.starttls(); s.login(SMTP_USER, SMTP_PASS); s.send_message(msg)
     print(f"Emailed digest to {EMAIL_TO}")
 
 
 # ----------------------------------------------------------------------------
-# MAIN
-# ----------------------------------------------------------------------------
-
 def main() -> None:
     raw: list[Job] = []
     raw += fetch_adzuna()
@@ -332,15 +366,12 @@ def main() -> None:
         raw += fetch_lever(slug)
     print(f"Pulled {len(raw)} raw listings.")
 
-    # Dedupe by title+company, keeping the first seen.
     seen, deduped = set(), []
     for j in raw:
         if j.key() in seen:
             continue
-        seen.add(j.key())
-        deduped.append(j)
+        seen.add(j.key()); deduped.append(j)
 
-    # Score + threshold.
     relevant = []
     for j in deduped:
         j.score = score(j)
@@ -349,7 +380,6 @@ def main() -> None:
     relevant.sort(key=lambda x: x.score, reverse=True)
     print(f"{len(relevant)} pass the relevance threshold. Checking links...")
 
-    # Verify each link is live (this is the slow part — network per job).
     active = []
     for j in relevant:
         if is_live(j.url):
@@ -358,13 +388,13 @@ def main() -> None:
             print(f"  dropped (dead/closed): {j.title} — {j.company}")
         time.sleep(0.3)
 
-    print(f"\n{len(active)} ACTIVE matches:\n")
+    print(f"\n{len(active)} ACTIVE matches.\n")
     for j in active:
         print(f"[{j.score}] {j.title} — {j.company} ({j.location}) · {j.posted}")
-        print(f"      {j.url}")
 
     write_csv(active, OUTPUT_CSV)
-    print(f"\nSaved -> {OUTPUT_CSV}")
+    write_html(active, OUTPUT_HTML)
+    print(f"Saved -> {OUTPUT_CSV} and {OUTPUT_HTML}")
     email_digest(active)
 
 
