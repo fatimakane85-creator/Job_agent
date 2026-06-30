@@ -1,14 +1,12 @@
 name: job-agent
 
-# Runs the agent once a week and publishes the results dashboard.
-
 on:
   schedule:
-    - cron: "0 12 * * 1"     # every Monday ~7-8 a.m. Montreal time
-  workflow_dispatch:          # also lets you press "Run workflow" yourself anytime
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
 
 permissions:
-  contents: write             # lets the agent save the dashboard back into your repo
+  contents: write
 
 jobs:
   find-jobs:
@@ -36,7 +34,8 @@ jobs:
       - name: Publish the dashboard
         run: |
           git config user.name "job-agent"
-          git config user.email "actions@users.noreplace.github.com"
+          git config user.email "actions@users.noreply.github.com"
           git add docs/index.html docs/jobs_found.csv
           git commit -m "Update job dashboard" || echo "No changes to publish"
+          git pull --rebase
           git push
