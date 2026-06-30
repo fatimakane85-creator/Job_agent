@@ -169,25 +169,38 @@ def fetch_jsearch() -> list[Job]:
     date_filter = "month" if MAX_DAYS_OLD > 7 else "week"
     headers = {**HEADERS, "x-rapidapi-key": JSEARCH_API_KEY,
                "x-rapidapi-host": "jsearch.p.rapidapi.com"}
-    queries = ["quality assurance OR validation pharmaceutical",
-               "assurance qualité OR validation pharmaceutique"]
+    queries = [f"quality assurance OR validation pharmaceutical {LOCATION}",
+               f"assurance qualité OR validation pharmaceutique {LOCATION}"]
     for q in queries:
         try:
             r = requests.get("https://jsearch.p.rapidapi.com/search-v2", headers=headers,
-                             params={"query": f"{q} {LOCATION}", "page": "1",
-                                     "num_pages": "1", "date_posted": date_filter,
+                             params={"query": q, "date_posted": date_filter,
                                      "country": COUNTRY}, timeout=25)
             r.raise_for_status()
-            for it in r.json().get("data", []):
+            payload = r.json()
+            data = payload.get("data", [])
+            # /search-v2 wraps jobs in an object {jobs:[...], cursor:...};
+            # the old endpoint returned a plain list. Handle both.
+            if isinstance(data, list):
+                items = data
+            elif isinstance(data, dict):
+                items = data.get("jobs")
+                if not isinstance(items, list):
+                    items = next((v for v in data.values() if isinstance(v, list)), [])
+            else:
+                items = []
+            for it in items:
+                if not isinstance(it, dict):
+                    continue
                 ts = it.get("job_posted_at_timestamp")
                 posted = (dt.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d") if ts else "")
                 jobs.append(Job(
-                    title=it.get("job_title", "").strip(),
-                    company=it.get("employer_name", "—"),
+                    title=(it.get("job_title") or "").strip(),
+                    company=it.get("employer_name") or "—",
                     location=", ".join(filter(None, [it.get("job_city"), it.get("job_state")])) or LOCATION,
-                    url=it.get("job_apply_link", ""),
+                    url=it.get("job_apply_link") or it.get("job_google_link") or "",
                     source=f"JSearch/{it.get('job_publisher','')}",
-                    posted=posted, description=it.get("job_description", "") or "",
+                    posted=posted, description=it.get("job_description") or "",
                 ))
         except Exception as e:
             print(f"[JSearch] '{q}' failed: {e}", file=sys.stderr)
