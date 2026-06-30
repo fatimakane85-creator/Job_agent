@@ -50,14 +50,31 @@ STRONG_TITLE_TERMS = [
 ]
 
 # Cut the two big noise sources we saw: software-testing "QA" and
-# non-pharma compliance (environmental / financial / legal).
+# non-pharma compliance (environmental / financial / legal),
+# plus senior/experienced roles so the list stays entry-level.
 EXCLUDE_TERMS = [
-    "senior manager", "director", "directeur", "vp ", "head of",
-    "10+ years", "15+ years", "sales", "ventes",
+    # seniority signals (not entry-level)
+    "senior", "sr.", "sr ", "lead", "principal", "manager", "gestionnaire",
+    "director", "directeur", "directrice", "chef ", "head of", "vp ",
+    "supervisor", "superviseur", "expert", " ii", " iii", "level 3", "niveau 3",
+    "5+ years", "7+ years", "8+ years", "10+ years", "15+ years",
+    "5 ans", "7 ans", "8 ans", "10 ans",
+    # off-field noise
+    "sales", "ventes",
     "software", "logiciel", "logicielle", "firmware", "embedded", "embarqué",
     "sdet", "developer", "développeur", "dev qa", "qa automation",
     "environmental", "environnement", "sols contaminés",
     "financial", "financier", "paralegal", "marketing compliance",
+]
+
+# Title words that signal an entry-level / junior fit — these get a boost so
+# the most junior-friendly roles rise to the top.
+ENTRY_TERMS = [
+    "junior", "jr", "entry", "entry-level", "débutant", "débutante",
+    "stagiaire", "intern", "internship", "trainee", "graduate", "diplômé",
+    "coordonnateur", "coordonnatrice", "coordinator", "technicien",
+    "technicienne", "technician", "associate", "associé", "associée",
+    "assistant", "adjoint", "adjointe", " i ", "niveau 1", "level 1",
 ]
 
 MIN_SCORE = 3
@@ -268,6 +285,8 @@ def score(job: Job) -> int:
     for kw in KEYWORDS:
         if kw.lower() in hay_all:
             s += 1
+    if any(t in hay_title for t in ENTRY_TERMS):   # entry-level fit → float up
+        s += 4
     return s
 
 
