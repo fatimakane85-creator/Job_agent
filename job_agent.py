@@ -173,7 +173,7 @@ def fetch_jsearch() -> list[Job]:
                "assurance qualité OR validation pharmaceutique"]
     for q in queries:
         try:
-            r = requests.get("https://jsearch.p.rapidapi.com/search", headers=headers,
+            r = requests.get("https://jsearch.p.rapidapi.com/search-v2", headers=headers,
                              params={"query": f"{q} {LOCATION}", "page": "1",
                                      "num_pages": "1", "date_posted": date_filter,
                                      "country": COUNTRY}, timeout=25)
