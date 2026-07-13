@@ -1,48 +1,58 @@
 score,title,company,location,posted,source,url
-17,"Quality Systems Specialist / Spécialiste, Systèmes Qualité (Canada)",Indero,"Montréal, Québec",2026-06-11,Adzuna,https://www.adzuna.ca/details/5760482335?utm_medium=api&utm_source=54d8500a
 13,"Coordonnateur Validation - Validation Coordinator (Temporaire, 12 mois)",GSK,"Saint-Laurent, Montréal",2026-07-05,Adzuna,https://www.adzuna.ca/details/5789380585?utm_medium=api&utm_source=54d8500a
-12,"Spécialiste Assurance Qualité, Opérations (Quart de Jour)",Haleon Plc.,Montreal,2026-07-03,JSearch/Sercanto,https://fr.ca.sercanto.com/detail/a/specialiste-assurance-qualite-operations-quart-de-jour_montreal_179020633
-11,Ingénieur.e/Spécialiste en validation pharmaceutique,LAPORTE L.E.C.,Montreal,2026-06-22,JSearch/Teal,https://www.tealhq.com/job/ing-nieur-e-sp-cialiste-en-validation-pharmaceutique_7ea1a24070efea761b85ff3601840834eed90
-9,Inspecteur Assurance Qualité - Quart de nuit (Fin de semaine),Galderma,"Baie-d'Urfé, Montréal",2026-06-28,Adzuna,https://www.adzuna.ca/details/5780523236?utm_medium=api&utm_source=54d8500a
-6,Administrateur de système de production,Pharmascience,"Mont-Royal, Montréal",2026-06-14,Adzuna,https://www.adzuna.ca/details/5763802636?utm_medium=api&utm_source=54d8500a
+9,Ingénieur.e/Spécialiste intermediaire en validation pharmaceutique,LAPORTE,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5797870995?utm_medium=api&utm_source=54d8500a
+7,"Spécialiste Projets AQ – Pharma, Assurance Groupe Jour 1",Groupe JAMP Pharma,"Boucherville, Quebec",2026-06-26,JSearch/Expertini,https://boucherville.ca.expertini.com/job/specialiste-projets-aq-pharma-assurance-groupe-jour-1-boucherville-groupe-jamp-pharma-291-5981168/
 18,"Spécialiste, assurance qualité / Specialist, Quality Assurance",Jubilant Radiopharma,"Kirkland, Quebec",2026-06-22,JSearch/LinkedIn,https://ca.linkedin.com/jobs/view/sp%C3%A9cialiste-assurance-qualit%C3%A9-specialist-quality-assurance-at-jubilant-radiopharma-4428964176
-17,"Specialiste en Validation, Assurance Qualite - Quality Assurance Validation Specialist",Grifols,Montreal,2026-06-16,JSearch/ZipRecruiter,"https://www.ziprecruiter.com/c/Grifols/Job/Specialiste-en-Validation,-Assurance-Qualite-Quality-Assurance-Validation-Specialist/-in-Montreal,QC?jid=b008429a3a5be1ad"
-14,Associe aux operations d'assurance qualite (Soir) - Quality Assurance Operations Associate (Evening),Grifols,"Montreal, Quebec",2026-07-01,JSearch/ZipRecruiter,"https://www.ziprecruiter.com/c/Grifols/Job/Associe-aux-operations-dassurance-qualite-(Soir)-Quality-Assurance-Operations-Associate-(Evening)/-in-Montreal,QC?jid=b1adc62fafc9d22e"
-11,Quality Assurance and Food Safety Coordinator,Sahah Naturals,"Montréal, Québec",2026-07-01,Adzuna,https://www.adzuna.ca/details/5783442849?utm_medium=api&utm_source=54d8500a
-11,"Spécialiste, Assurance Qualité – Opérations / Specialist, Quaity Assurance Operations - Jubilan[...]",Jubilant HollisterStier CMO,"Longueuil, Quebec",2026-06-18,JSearch/Expertini,https://longueuil.ca.expertini.com/job/specialiste-assurance-qualite-operations-specialist-quaity-assurance-operations-jubilan-longueuil-jubilant-hollisterstier-cmo-291-7738089/
+17,"Specialiste en Validation, Assurance Qualite - Quality Assurance Validation Specialist",Grifols,"Montreal, Quebec",2026-06-16,JSearch/ZipRecruiter,"https://www.ziprecruiter.com/c/Grifols/Job/Specialiste-en-Validation,-Assurance-Qualite-Quality-Assurance-Validation-Specialist/-in-Montreal,QC?jid=b008429a3a5be1ad"
+11,Analyste assurance qualité (CAT1) / Analyst Quality assurance (CAT1),Airbus,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798269836?utm_medium=api&utm_source=54d8500a
+11,"Quality Assurance and Compliance Monitoring Specialist, Civil (Americas)",CAE,"Montréal, Québec",2026-07-09,Adzuna,https://www.adzuna.ca/details/5794710930?utm_medium=api&utm_source=54d8500a
+11,"Specialist, Quality Assurance",Via Rail Canada,"Montreal, Quebec",2026-07-09,JSearch/Sercanto,https://fr.ca.sercanto.com/detail/a/specialist-quality-assurance_montreal_186217229
+8,SQA Technician,Matrox,"Roxboro, Montréal",2026-07-09,Adzuna,https://www.adzuna.ca/details/5794730350?utm_medium=api&utm_source=54d8500a
+8,SQA Technician,Matrox Graphics Inc,"Dorval, Montréal",2026-07-08,Adzuna,https://www.adzuna.ca/details/5793398507?utm_medium=api&utm_source=54d8500a
 8,Quality Assurance Specialist (18 month contract),Groupe Marcelle,"Montréal, Québec",2026-06-19,Adzuna,https://www.adzuna.ca/details/5769780295?utm_medium=api&utm_source=54d8500a
-8,Business Quality Assurance Testing Officer,Desjardins,"Montreal, Quebec",2026-06-21,JSearch/Teal,https://www.tealhq.com/job/business-quality-assurance-testing-officer_7ea1a76be12ebac7c5cc38e63e4e25c6ae3e3
-7,"Technicien.ne , Laboratoire et Contrôle Qualité",Saputo,"Saint-Léonard, Montréal",2026-07-04,Adzuna,https://www.adzuna.ca/details/5788463402?utm_medium=api&utm_source=54d8500a
+8,Quality assurance officer - pharmaceutical products,ITR Laboratories Canada Inc,"Montreal, Quebec",2026-07-13,JSearch/Learn4Good,https://www.learn4good.com/jobs/montreal/canada/quality_control/5282837609/e/
+7,Spécialiste de la chaîne d'approvisionnement et Qualité / Supply Chain Quality Specialist (SCQS),Airbus,"Montréal, Québec",2026-07-08,Adzuna,https://www.adzuna.ca/details/5793292306?utm_medium=api&utm_source=54d8500a
 7,Spécialiste qualité et formation / Quality and Training Specialist,Akelius,"Montréal, Québec",2026-06-27,Adzuna,https://www.adzuna.ca/details/5778965080?utm_medium=api&utm_source=54d8500a
+7,Technicien(ne) contrôle qualité,Smiths Interconnect,"Kirkland, Montréal",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795500326?utm_medium=api&utm_source=54d8500a
+7,Quality Control Technician,Puzzle Medical Devices,"Montréal, Québec",2026-07-08,Adzuna,https://www.adzuna.ca/details/5793257637?utm_medium=api&utm_source=54d8500a
+6,Inspecteur du contrôle qualité à la réception / Quality Control Inspector,Smardt,"Dorval, Montréal",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798274471?utm_medium=api&utm_source=54d8500a
 6,Spécialiste contrôle qualité - Quality control specialist,Expresco Foods,"Montréal, Québec",2026-06-25,Adzuna,https://www.adzuna.ca/details/5776102488?utm_medium=api&utm_source=54d8500a
-6,Spécialiste Assurance Qualité Quart de Soir,Jubilant Pharma Limited,Montreal,2026-07-03,JSearch/Sercanto,https://fr.ca.sercanto.com/detail/a/specialiste-assurance-qualite-quart-de-soir_montreal_179010219
 5,Coordonnateur des rapports – Soutien au contrôle de projet,Gold Fields,"Montréal, Québec",2026-07-03,Adzuna,https://www.adzuna.ca/details/5786691530?utm_medium=api&utm_source=54d8500a
-5,Technicien(ne) de machines – Quart de nuit,Altium Canada,"Montréal, Québec",2026-06-29,Adzuna,https://www.adzuna.ca/land/ad/5781482572?se=1nXwhG158RGW89_mIOpt3A&utm_medium=api&utm_source=54d8500a&v=25544C3029E1D4ED1D42E9C7431B42B078B1F07D
-5,Responsable Qualité HALO PHARMA,Halo Pharmaceutical Canada,"Montreal, Quebec",2026-06-08,JSearch/Learn4Good,https://www.learn4good.com/jobs/montreal/canada/quality_control/5165672386/e/
-5,Spécialiste Validation & Transfert Technologique - Pharmaceutique,Laboratoires Confab Laboratories,Montreal,2026-06-24,JSearch/Expertini,https://longueuil.ca.expertini.com/job/specialiste-validation-transfert-technologique-pharmaceutique-longueuil-laboratoires-confab-laboratories-291-7876587/
-4,Executive Assistant to the Chief Human Resources Officer,Cogeco,"Montréal, Québec",2026-07-04,Adzuna,https://www.adzuna.ca/details/5788466776?utm_medium=api&utm_source=54d8500a
-4,QA Analyst (12-Month Contract Maternity Leave Replacement) | Analyste QA (contrat de 12 mois rempl,Jesta I.S.,"Montréal, Québec",2026-07-03,Adzuna,https://www.adzuna.ca/details/5786700089?utm_medium=api&utm_source=54d8500a
+5,Coordonnateur des rapports – Soutien au contrôle de projet,BRH,"Montréal, Québec",2026-07-02,Adzuna,https://www.adzuna.ca/land/ad/5786218124?se=MtW7W-d-8RG4qo4XG7jMrg&utm_medium=api&utm_source=54d8500a&v=FA49093C02FB2127C461F15C61E4F08529655DC3
+5,Technicien(ne) de machines – Quart de nuit,Altium Canada,"Montréal, Québec",2026-06-29,Adzuna,https://www.adzuna.ca/land/ad/5781482572?se=KNttXed-8RG4qo4XG7jMrg&utm_medium=api&utm_source=54d8500a&v=25544C3029E1D4ED1D42E9C7431B42B078B1F07D
+4,Ingnieur junior Spcialiste en dveloppement de produits (CPI) / Junior Engineer Product Developmen,Dupray,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5797882145?utm_medium=api&utm_source=54d8500a
+4,Jr Parts Advisor,VinFast,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5796207364?utm_medium=api&utm_source=54d8500a
+4,E-MAIL MARKETING AND E-COMMERCE ASSISTANT,Bikini Village,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5796092568?utm_medium=api&utm_source=54d8500a
+4,Stagiaire DevOps - Automne 2026,Tecsys Inc.,"Montréal, Québec",2026-07-13,Adzuna,https://www.adzuna.ca/details/5798953854?utm_medium=api&utm_source=54d8500a
+4,Technicien(ne) comptable,WEPOINT Canada Développement,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798284031?utm_medium=api&utm_source=54d8500a
+4,"Commercial Credit Analyst (New or Recent Graduate), Montreal",Bank of Montreal,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798272001?utm_medium=api&utm_source=54d8500a
+4,"Clinical Trial Coordinator - Finance - Montreal, Canada",IRE,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798271855?utm_medium=api&utm_source=54d8500a
+4,Technicien en alarme incendie,Johnson Controls,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798271713?utm_medium=api&utm_source=54d8500a
+4,Technician R&D l R&D Technician,Medisca,"Saint-Laurent, Montréal",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798270373?utm_medium=api&utm_source=54d8500a
+4,"Assistant Vice-President, Procurement & Contract Management",Business Development Bank of Canada,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798283913?utm_medium=api&utm_source=54d8500a
+4,Spécialiste en automatisation de l'assurance qualité,CGI,"Montréal, Québec",2026-07-07,Adzuna,https://www.adzuna.ca/details/5791393780?utm_medium=api&utm_source=54d8500a
+4,Customer Service Coordinator,Vortex International,"Pointe-Claire, Montréal",2026-07-10,Adzuna,https://www.adzuna.ca/details/5796192983?utm_medium=api&utm_source=54d8500a
+4,"Technicien Contrle Qualit | JOUR, SOIR ou NUIT | 25$/h | Permanent | Montral",Fuze HR Solutions Inc.,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795527389?utm_medium=api&utm_source=54d8500a
+4,Coordonnateur(trice) en gestion de projets,AECOM,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795193777?utm_medium=api&utm_source=54d8500a
+4,Technicien de laboratoire C - Chimie,AGAT Laboratories,"Montréal, Québec",2026-07-09,Adzuna,https://www.adzuna.ca/details/5794086277?utm_medium=api&utm_source=54d8500a
+4,Technicien de laboratoire B - Chimie,AGAT Laboratories,"Montréal, Québec",2026-07-09,Adzuna,https://www.adzuna.ca/details/5794071698?utm_medium=api&utm_source=54d8500a
 4,Analyste QA/QA Analyst,Browns Shoes,"Montréal, Québec",2026-07-03,Adzuna,https://www.adzuna.ca/details/5786698057?utm_medium=api&utm_source=54d8500a
-4,Technicien.ne électricité du bâtiment (PL),TOTEM Recruteur de talent,"Montréal, Québec",2026-07-04,Adzuna,https://www.adzuna.ca/details/5787951917?utm_medium=api&utm_source=54d8500a
-4,Coordonnateur/coordonnatrice de l'HACCP,Huiles TITAN Oils Inc.,"Baie-d'Urfé, Montréal",2026-07-04,Adzuna,https://www.adzuna.ca/details/5787951781?utm_medium=api&utm_source=54d8500a
-4,"Intern, Canada Growth Fund (May – August 2027)",PSP Investments,"Montréal, Québec",2026-07-05,Adzuna,https://www.adzuna.ca/details/5789397538?utm_medium=api&utm_source=54d8500a
-4,Service Technician / Technicien de service,Patterson Dental Supply,"Montréal, Québec",2026-07-05,Adzuna,https://www.adzuna.ca/details/5789390337?utm_medium=api&utm_source=54d8500a
-4,"Intern, Natural Resources Investments, Latin America (May – August 2027)",PSP Investments,"Montréal, Québec",2026-07-05,Adzuna,https://www.adzuna.ca/details/5789386739?utm_medium=api&utm_source=54d8500a
-4,Avocat(e) interne / In house Lawyer,Smardt Chiller Group,"Dorval, Montréal",2026-07-06,Adzuna,https://www.adzuna.ca/details/5789955965?utm_medium=api&utm_source=54d8500a
-4,Assistant Gerant Temporaire - Galeries d'Anjou,Lush Handmade Cosmetics,"Montréal, Québec",2026-07-05,Adzuna,https://www.adzuna.ca/details/5789399071?utm_medium=api&utm_source=54d8500a
-4,Spécialiste en automatisation de l'assurance qualité,CGI,"Montréal, Québec",2026-06-25,Adzuna,https://www.adzuna.ca/details/5776756730?utm_medium=api&utm_source=54d8500a
-4,Technicien de laboratoire B,AGAT Laboratories,"Montréal, Québec",2026-07-03,Adzuna,https://www.adzuna.ca/details/5786699000?utm_medium=api&utm_source=54d8500a
-4,Technicien sénior ou technicienne sénior en conception de barrages et structures du béton,GHD,"Anjou, Montréal",2026-07-02,Adzuna,https://www.adzuna.ca/details/5785978369?utm_medium=api&utm_source=54d8500a
-4,Surveillance de Travaux de Construction – Technicien Civil/Architecture - Manic 3,SGS,"Montréal, Québec",2026-06-30,Adzuna,https://www.adzuna.ca/details/5781865581?utm_medium=api&utm_source=54d8500a
-4,Technicien de chantier,Groupe GÉOS inc.,"Anjou, Montréal",2026-06-27,Adzuna,https://www.adzuna.ca/land/ad/5779637793?se=RHBmg2158RG7440y_vmC1Q&utm_medium=api&utm_source=54d8500a&v=F190EA89865B86E00D84AA5A70D56930217AE1A8
-4,Technicien de production Albumin Purification Manufacturing Technician (Quart de jour/Day Shift),"Grifols Shared Services North America, Inc","Montréal, Québec",2026-06-14,Adzuna,https://www.adzuna.ca/details/5763254213?utm_medium=api&utm_source=54d8500a
-4,Computerized Systems Validation Specialist,GenAIz,"Montréal, Québec",2026-06-10,Adzuna,https://www.adzuna.ca/details/5758314735?utm_medium=api&utm_source=54d8500a
-4,"Stagiaire, opration de fabrication, Fractionnement, Manufacturing Operations Intern, Fractionation","Grifols Shared Services North America, Inc","Montréal, Québec",2026-06-10,Adzuna,https://www.adzuna.ca/details/5758133875?utm_medium=api&utm_source=54d8500a
-4,Coordonnateur(trice) en analyse de données / Data Analyst Coordinator,Keolis America,"Westmount, Montréal",2026-07-04,Adzuna,https://www.adzuna.ca/details/5788369545?utm_medium=api&utm_source=54d8500a
-4,Coordonnateur(trice) en gestion documentaire / Document Management Coordinator,Keolis America,"Westmount, Montréal",2026-07-04,Adzuna,https://www.adzuna.ca/details/5788355633?utm_medium=api&utm_source=54d8500a
-4,Training Coordinator / Coordinateur de formation |YUL,Menzies Aviation Careers,"Dorval, Montréal",2026-07-04,Adzuna,https://www.adzuna.ca/details/5788459587?utm_medium=api&utm_source=54d8500a
-4,Avocat(e) interne / In house Lawyer,Smardt Inc.,"Dorval, Montréal",2026-07-03,Adzuna,https://www.adzuna.ca/details/5786975140?utm_medium=api&utm_source=54d8500a
-3,Analyste Assurance Qualit / QA Analyst,Toon Boom Animation Inc.,"Montréal, Québec",2026-07-03,Adzuna,https://www.adzuna.ca/details/5786698939?utm_medium=api&utm_source=54d8500a
-3,Inspecteur du contrôle de la qualité,Smiths Interconnect,"Kirkland, Montréal",2026-06-30,Adzuna,https://www.adzuna.ca/details/5781865613?utm_medium=api&utm_source=54d8500a
-3,Contrôle Qualité Analyste Halo Pharma,Halo Pharmaceutical Canada,"Montreal, Quebec",2026-06-11,JSearch/Learn4Good,https://www.learn4good.com/jobs/montreal/canada/quality_control/5171735685/e/
-3,QC Analyst,PE Global (UK),"Montreal, Quebec",2026-06-21,JSearch/Learn4Good,https://www.learn4good.com/jobs/montreal/canada/quality_control/5203442462/e/
+4,"Technicien de production, Fractionnement - Manufacturing Technician, Fractionation","Grifols Shared Services North America, Inc","Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5797703324?utm_medium=api&utm_source=54d8500a
+4,Technicien de laboratoire - Poste de soir ou de nuit SALAIRE initial 29.82$/h  Prime de quart,Refresco Careers,"Pointe-Claire, Montréal",2026-07-10,Adzuna,https://www.adzuna.ca/details/5796103005?utm_medium=api&utm_source=54d8500a
+4,Computerized Systems Validation Specialist,GenAIz,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795490920?utm_medium=api&utm_source=54d8500a
+4,Receptionist/ Office Assistant,Mint Green Group,"Pointe-Claire, Montréal",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798264086?utm_medium=api&utm_source=54d8500a
+4,Technicien(ne) aux Encres,Labelink,"Anjou, Montréal",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798277058?utm_medium=api&utm_source=54d8500a
+4,AI-First Engineering Intern,Xsolla,"Montréal, Québec",2026-07-12,Adzuna,https://www.adzuna.ca/details/5798278307?utm_medium=api&utm_source=54d8500a
+4,Payroll Coordinator,CPP Careers,"Montréal, Québec",2026-07-11,Adzuna,https://www.adzuna.ca/details/5797326827?utm_medium=api&utm_source=54d8500a
+4,Payroll & Human Resources Coordinator,CPP Careers,"Montréal, Québec",2026-07-11,Adzuna,https://www.adzuna.ca/details/5797263517?utm_medium=api&utm_source=54d8500a
+4,Avocat(e) interne / In house Lawyer,Smardt,"Dorval, Montréal",2026-07-11,Adzuna,https://www.adzuna.ca/details/5796867899?utm_medium=api&utm_source=54d8500a
+4,Personal Banking Associate,BMO,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5796238760?utm_medium=api&utm_source=54d8500a
+4,Technicien(ne) de procédés en ingénierie,Smiths Interconnect,"Kirkland, Montréal",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795497211?utm_medium=api&utm_source=54d8500a
+4,Bilingual Pharmaceutical Trainers,ProGamma Science Corporation,"Montreal, Quebec",2026-07-08,JSearch/Learn4Good,https://www.learn4good.com/jobs/montreal/canada/pharmaceutical/5273100056/e/
+3,Quality Control Inspector,Smiths Interconnect,"Kirkland, Montréal",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795531381?utm_medium=api&utm_source=54d8500a
+3,Quality Engineering,Smiths Interconnect,"Kirkland, Montréal",2026-07-10,Adzuna,https://www.adzuna.ca/details/5795523040?utm_medium=api&utm_source=54d8500a
+3,Payroll Tax & Compliance Specialist,CPP Careers,"Montréal, Québec",2026-07-11,Adzuna,https://www.adzuna.ca/details/5797373854?utm_medium=api&utm_source=54d8500a
+3,Payroll Operations & Compliance Partner,CPP Careers,"Montréal, Québec",2026-07-11,Adzuna,https://www.adzuna.ca/details/5797269925?utm_medium=api&utm_source=54d8500a
+3,Tax Compliance & HRIS Specialist,CPP Careers,"Montréal, Québec",2026-07-10,Adzuna,https://www.adzuna.ca/details/5796146196?utm_medium=api&utm_source=54d8500a
+3,"Partenaire, opérations de la paie et conformité",CPP Careers,"Montréal, Québec",2026-07-11,Adzuna,https://www.adzuna.ca/details/5797262911?utm_medium=api&utm_source=54d8500a
+3,agent/agente de l'assurance de la qualité - produits pharmaceutiques,ITR Laboratories Canada Inc,"Baie-D'Urfe, Quebec",2026-07-07,JSearch/Indeed,https://emplois.ca.indeed.com/viewjob?jk=1cda71ee6b513825
